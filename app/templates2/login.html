@@ -1,0 +1,27 @@
+{% extends 'base.html' %} 
+
+{% block main %} 
+
+
+
+<div class="wrapper" >
+    <form class="form-signin" action = '/api/user/login' method = 'POST'>  
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        <h2 class="form-signin-heading">Please login</h2>
+        <!--{{ form.username.label }}-->
+        {{ form.username(size = 30, class = 'form-control') }}
+        <!--<input type="text" class="form-control" name="username" placeholder="Email Address" required="" autofocus="" />-->
+        {{ form.password(size = 30, class = 'form-control') }}
+        <!--<input type="password" class="form-control" name="password" placeholder="Password" required=""/>      -->
+        <label class="checkbox">
+            <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
+        </label>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
+    </form>
+</div>
+
+
+{% include 'messages.html' %}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %} 
+
+{% block main %} 
+
+<h1>INDEX</h1>
+<h3>
+{% include 'messages.html' %}
+</h3>
+{% if not current_user.is_authenticated %}
+<a href ='/login'>login </a>
+<br />
+<a href ='/register'>Register </a>
+{% endif %}
+<br />
+<a href="{{ url_for('home') }}">Home</a>
+<br />
+{% if current_user.is_authenticated %}
+{{ current_user.username }}
+<br />
+<a href="{{ url_for('logout') }}">Logout</a>
+<br />
+<a href = {{ url_for("userWishList", userid = current_user.id) }}> Wishlist </a>
+<br />
+<a href = {{ url_for("createWish", userid = current_user.id) }}> New </a>
+
+{% endif %}
+
+<br />
+{% endblock %}

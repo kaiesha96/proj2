@@ -1,0 +1,39 @@
+<div class="jumbotron text-center">
+	<div class="masthead ui text center aligned container">
+		<h1 class="ui header horizontal divider"><i class="star icon"></i> Wishes</h1>
+	</div>
+	
+	<div class="container segment ui">
+			<h1 class="ui left floated header">My Wish List</h1>
+			<a id="add-wish" class="ui primary button pull-right" href="#new-wish"><i class="add icon"> </i> Add Wish </a>
+			<div class="ui primary button"><i class="share icon"></i>Share</div>
+			<div class="divider ui"></div>
+			<div class="ui cards">
+				<!--<div class="ui card" ng-repeat="movie in movies track by $index">-->
+				<div class="ui card">
+					<div class="image">
+						<img src="uploads/user_profile_administrator.png">
+					</div>
+					<div class="content">
+						<a class="header">movie.title</a>
+						<div class="meta">
+							<span class="date">Filmed in  movie.yearFilmed </span>
+						</div>
+						<div class="description">
+							<p> movie.description </p>
+						</div>
+					</div>
+					<div class="content extra">
+						Rating:  movie.rating /5 <i class="star icon"></i>
+					</div>
+					<!--<div class="ui bottom attached red button" ng-click="removeMovie($index)">-->
+					<div class="ui bottom attached red button">
+						<i class="remove circle icon"></i>
+						Remove Movie
+					</div>
+				</div>
+			</div>
+
+		</div>
+	<!--<p>{{ message }}</p>-->
+</div>

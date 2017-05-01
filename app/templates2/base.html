@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Hello Wishes</title>
+    <script src="/static/js/angular.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/app.css" rel="stylesheet">
+
+    <!-- Temporary navbar container fix -->
+    <style>
+    .navbar-toggler {
+        z-index: 1;
+    }
+    
+    @media (max-width: 576px) {
+        nav > .container {
+            width: 100%;
+        }
+    }
+    </style>
+
+</head>
+
+<body ng-app="myApp">
+
+    <!-- Navigation -->
+    {% include 'header.html' %}
+
+    <!-- Page Content -->
+    <div class="container main" ng-controller="TestCont">
+        
+        <!-- Page Heading -->
+        
+        
+        <!-- /.row -->
+        {% block main %} {% endblock %}
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/tether/tether.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+</body>
+
+</html>

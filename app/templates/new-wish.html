@@ -1,0 +1,37 @@
+<div class="jumbotronr">
+    <div class="ui">
+    	<!--<i class="close icon"></i>-->
+    	<div class="content">
+    		<div class="description">
+    			<!--<form class="ui form" ng-submit="addMovie()">-->
+    			<form class="ui form form-wish" action = '#' method = 'POST' >
+    			    <h2 class="form-heading">New Wish</h2>
+    				<div class="field">
+    					<label>Title</label>
+    					<input type="text" name="wish-title" ng-model="title" placeholder="Wish Title">
+    				</div>
+    				<div class="field">
+    					<label>URL</label>
+    					<input type="text" name="wish-url" ng-model="wishURL" placeholder="www.wish.com/wished-item.html">
+    				</div>
+    				<div class="field">
+    					<label for="description">Description</label>
+    					<textarea name="description" ng-model="description" rows="8" cols="80"></textarea>
+    				</div>
+				
+    			</form>
+    			<div class="actions form-btn">
+				    <!--<div class="ui positive right labeled icon button" ng-click="addMovie()">-->
+				    <button class="ui positive pull-right labeled icon button" ng-click="createWish()">
+            			Next
+            			<i class="checkmark icon"></i>
+            		</button>
+            		<button class="ui black deny button pull-right">
+            			Cancel
+            		</button>
+            	</div>
+    		</div>
+    	</div>
+    	
+    </div>
+</div>
