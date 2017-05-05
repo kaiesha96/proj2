@@ -28,7 +28,7 @@ class UserProfile(db.Model, UserMixin):
 	@staticmethod
 	def get_new_id():
 		new_id = long(time())
-		return new_id
+		return new_id #michelle advertising 
 		
 	@staticmethod
 	def timeinfo():
@@ -65,10 +65,10 @@ class WishedItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer) #the user that it is assigned to
     #wishListID = db.Column(db.Integer, nullable=False)
-    title = db.Column(db.String(80))
-    description = db.Column(db.String(80))
-    weburl = db.Column(db.String(80))
-    thumbnail = db.Column(db.String(80))
+    title = db.Column(db.String(100))
+    description = db.Column(db.String(500))
+    weburl = db.Column(db.String(500))
+    thumbnail = db.Column(db.String(200))
     
     def __init__(self, userid, title, description, weburl, thumbnail):
 		self.id	= WishedItem.get_new_id()

@@ -9,27 +9,26 @@
 			<div class="ui primary button"><i class="share icon"></i>Share</div>
 			<div class="divider ui"></div>
 			<div class="ui cards">
-				<!--<div class="ui card" ng-repeat="movie in movies track by $index">-->
-				<div class="ui card">
+				<div class="ui card" ng-repeat="wish in wishes track by $index">
+				<!--<div class="ui card">-->
 					<div class="image">
-						<img src="uploads/user_profile_administrator.png">
+						<a class="header" ng-href = '{{ wish.weburl }}' target="_blank"> <img ng-src='{{ wish.thumbnail }}'> </a>
 					</div>
 					<div class="content">
-						<a class="header">movie.title</a>
-						<div class="meta">
-							<span class="date">Filmed in  movie.yearFilmed </span>
-						</div>
+						<a class="header" ng-href = '{{ wish.weburl }}' target="_blank">{{ wish.title }}</a>
+						<!--{'id' : wish.id, 'user' : wish.userid, 'title' : wish.title, 'description' : wish.description, 'weburl' : wish.weburl, 'thumbnail' : wish.thumbnail}-->
+					
 						<div class="description">
-							<p> movie.description </p>
+							<p> {{ wish.description }} </p>
 						</div>
 					</div>
 					<div class="content extra">
-						Rating:  movie.rating /5 <i class="star icon"></i>
+						Rating:  3 /5 <i class="star icon"></i>
 					</div>
-					<!--<div class="ui bottom attached red button" ng-click="removeMovie($index)">-->
-					<div class="ui bottom attached red button">
+					<div class="ui bottom attached red button" ng-click="removeWish($index)">
+					<!--<div class="ui bottom attached red button">-->
 						<i class="remove circle icon"></i>
-						Remove Movie
+						Delete Wish
 					</div>
 				</div>
 			</div>

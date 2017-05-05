@@ -17,33 +17,23 @@
 	<body ng-controller="mainController">
 
 		<nav class="navbar navbar-default">
-			
 			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#/">Wishlist App</a>
+					<a class="navbar-brand" href="/">Wishlist App</a>
 				</div>
 
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
-					<li ng-show="token"><a href="#profile"><i class="fa fa-home"></i>Profile</a></li>
-					<li ng-hide="token"><a href="#register"><i class="fa fa-user-plus"></i> Register</a></li>
-					<li ng-hide="token"><a href="#login"><i class="fa fa-sign-in" ></i> Login</a></li>
-					<li ng-show="token"><a href ng-click="logout()"><i class="fa fa-sign-out" ></i> Logout</a></li>
-					<li ng-show="token"><a href="#wish"><i class="fa fa-list"></i> Wishe List</a></li>
+					<li><a href="#/"><i class="fa fa-home"></i>Home</a></li>
+					<li><a href="#register"><i class="fa fa-user-plus"></i>Register</a></li>
+					<li><a href="#login"><i class="fa fa-sign-in"></i>Login</a></li>
 				</ul>
 			</div>
 		</nav>
-		<div class="wrap">
-			<div id="main" class="container main">
-				<div ng-view></div>
-			</div>
+
+		<div id="main" class="container main">
+			<div ng-view></div>
 		</div>
-		<footer id="footer">
-		    <hr>
-		    <div class="container">
-		        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
-		    </div>
-		</footer>
+        
         <script src="app/static/js/angular.min.js"></script>
 		<script src="app/static/js/angular-route.js"></script>
 		<script src="app/static/js/jquery-3.1.1.js" charset="utf-8"></script>

@@ -20,12 +20,9 @@
         <div ng-show="scmessage" class = "alert alert-success">
             {{scmessage}}
         </div>
-        <!--<div ng-if = "formSignin.userEmail.$touched" ng-messages="formSignin.userEmail.$error" class="alert alert-danger fade-in" role="alert">-->
-        <!--    <div ng-message="email">Invalid email address</div>-->
-        <!--</div>-->
-        <!--<div ng-if = "formSignin.password.$touched" ng-messages="formSignin.password.$error" class="alert alert-danger fade-in" role="alert">-->
-        <!--    <div ng-message="required">Invalid password</div>-->
-        <!--</div>-->
+        <div ng-show="scmessage" class = "alert alert-warning">
+            {{message}}
+        </div>
     </form>
     <div class="form-signin form-btn">
         <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()" >Login</button>

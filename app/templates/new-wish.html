@@ -8,21 +8,32 @@
     			    <h2 class="form-heading">New Wish</h2>
     				<div class="field">
     					<label>Title</label>
-    					<input type="text" name="wish-title" ng-model="title" placeholder="Wish Title">
+    					<input type="text" name="wish-title" ng-model="newWish.title" placeholder="Wish Title" ng-disabled="findimg" ng-init="findimg=false">
     				</div>
     				<div class="field">
     					<label>URL</label>
-    					<input type="text" name="wish-url" ng-model="wishURL" placeholder="www.wish.com/wished-item.html">
+    					<input type="text" name="wish-url" ng-model="newWish.url" placeholder="www.wish.com/wished-item.html" ng-disabled="findimg" ng-init="findimg=false">
     				</div>
     				<div class="field">
     					<label for="description">Description</label>
-    					<textarea name="description" ng-model="description" rows="8" cols="80"></textarea>
+    					<textarea name="description" ng-model="newWish.description" rows="8" cols="80" ng-disabled="findimg" ng-init="findimg=false"></textarea>
     				</div>
-				
+				    <div ng-show="successmsg" class = "alert alert-success">
+                        {{successmsg}}
+                    </div>
+                    <div ng-show="errormsg" class = "alert alert-warning">
+                        {{errormsg}}
+                    </div>
+                    
+                    <div class="container thumb-image" ng-show='images'>
+                        <span ng-repeat="imgurl in images track by $index" ng-click='submitwish($index)'>
+                            <img ng-src="{{ imgurl }}" class="img-thumbnail" alt="Cinque Terre" width="152" height="118"> 
+                        </span>
+                    </div>
     			</form>
     			<div class="actions form-btn">
 				    <!--<div class="ui positive right labeled icon button" ng-click="addMovie()">-->
-				    <button class="ui positive pull-right labeled icon button" ng-click="createWish()">
+				    <button class="ui positive pull-right labeled icon button" ng-click="createWish()" ng-disabled="findimg" ng-init="findimg=false">
             			Next
             			<i class="checkmark icon"></i>
             		</button>

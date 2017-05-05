@@ -1,24 +1,7 @@
-html{
-    position: relative;
-    min-height: 100%;
-}
 
 body {
-    /*margin-top: 60px;*/
-    margin-bottom: 150px;
-    background: #eee !important;
-}
-
-.footer {
-    margin: 0px auto;
-    padding: 10px;
-    text-align: center;
-    background-color: #272626;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    color: #fff;
-    
+    /*background: #eee !important;*/
+    background-image: url("https://ununsplash.imgix.net/uploads/1413259835094dcdeb9d3/6e609595?q=75&fm=jpg&s=6a4fc66161293fc4a43a6ca6f073d1c5");
 }
 
 .wrapper {	
@@ -27,7 +10,6 @@ body {
 }
 
 .form-signin, .form-signup, .form-wish, .form-btn{
-    /*max-width: 600px;*/
     padding: 15px 35px 10px;
     margin: 0 auto;
     background-color: #fff;
@@ -75,7 +57,7 @@ input[type="text"], input[type="password"] {
     margin-bottom: 30px;
 }
 
-.btn:hover {
+.btn:hover, a:hover {
     cursor: pointer !important;
 }
 
@@ -86,4 +68,60 @@ input[type="text"], input[type="password"] {
 .divider{
     margin-top: 0px;
     
+}
+
+.profile{
+    margin: 0px auto;
+    padding-top: 40px;
+}
+
+.wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -160px;
+    padding: 0 0 160px;
+}
+
+#footer {
+    height: 160px;
+    margin-top:50px;
+    padding-top:20px;
+    padding-bottom:20px;
+    background-color: #ee6e73;
+    color: #fff;
+}
+
+.navbar-header a, .navbar-nav li a{
+    color: #fff !important;
+    font-size: x-large;
+}
+
+.navbar{
+    background-color: #ee6e73;
+}
+
+.navbar-header a:hover, .navbar-nav li a:hover{
+    color :  #656565 !important;
+}
+
+.btn-grp{
+    margin-top: 100px;
+}
+.btn-grp .btn-lg{
+    margin-top: 30px;
+    padding: 30px;
+}
+
+.btn-secondary {
+    border: 1px solid #96c5fb;
+}
+
+.thumb-image span{
+    float:left; 
+    margin-right: 30px;
+}
+
+.thumb-image span:hover{
+    cursor: pointer;
 }

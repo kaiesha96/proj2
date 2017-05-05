@@ -9,57 +9,35 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
 from flask import render_template, request, redirect, url_for, flash, session, abort, jsonify, send_from_directory, session, make_response
 from sqlalchemy.sql import exists
-from jwt import encode, decode
+from jwt import encode, decode, InvalidTokenError
 from werkzeug.wsgi import SharedDataMiddleware
 from json import dumps
-@app.route('/')
-def home():
-	return render_template('indexT.html')
+import requests
+from bs4 import BeautifulSoup
+import urlparse
 
+from requests.packages.urllib3.exceptions import InsecureRequestWarning, SNIMissingWarning, InsecurePlatformWarning
 
-
-
-
-@app.route('/api/test', methods = ['GET', 'POST'])
-def testAPI(username, homePage):
-	return username
-	
-@app.route('/register')
-def registerUserForm():
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
-	form = RegisterForm()
-	return render_template('signup.html', form = form)
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+requests.packages.urllib3.disable_warnings(SNIMissingWarning)
+requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
 
 @app.route('/login')
 def login():
-	form = LoginForm()
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
-	return render_template('login.html', form = form)
-
+	return dumps({'message' : '400-ERROR', 'key': 'null', 'user': {}})
+	
 @app.route('/logout')
-@login_required
+# @login_required
 def logout():
 	logout_user()
 	return redirect(url_for('home'))
 
-@app.route('/create-wish')
-@login_required
-def createWish():
-	form = WishForm()
-	return render_template('create-wish.html', form = form)
 	
-@app.route('/wish', methods = ['GET'])
-def userWishes(myWish):
-	return render_template('wish.html', myWish = myWish)
-	
-
 @login_manager.user_loader
 def load_user(id):
 	return UserProfile.query.get(int(id))
 
-@app.route('/api/user/register', methods = ['POST'])
+@app.route('/api/users/register', methods = ['POST'])
 def registerUser():
 	form = RegisterForm()
 	user = None
@@ -90,85 +68,132 @@ def registerUser():
 	else:
 		return redirect(url_for('registerUserForm'))
 
-@app.route('/api/user/login', methods = ['POST'])
-def userlogin():
-	print request.get_json()
-	data = request.get_json()
-	# return dumps({"message" : data['password']})
-	users = UserProfile.query.all()
-	for user in users:
-		if user.username == data['email'] and check_password_hash(user.password, data['password']):
-			obj = {'userid' : user.id, 'email' : user.username, 'firstname' : user.first_name, 'lastname' : user.last_name, 'image' : user.profile_photo}
-			auth = encode(obj, str(user.id), algorithm = 'HS256')
-			user.secretKey = auth
-			login_user(user)
-			next = request.args.get('next')
-			print next
-			return dumps({'token': auth, 'user' : obj, 'message' : "SUCCESS"})
-		elif user.username == data['email'] and not check_password_hash(user.password, data['password']):
-			return dumps({'message' : 'PASSWORD'})
-	return dumps({'message' : 'USER'})
-	
-	# form = LoginForm()
-	# if request.method == 'POST':
-	# 	if form.validate_on_submit():
-	# 		users = UserProfile.query.all()
-	# 		for user in users:
-	# 			if user.username == form.username.data and check_password_hash(user.password, form.password.data):
-	# 				login_user(user)
-	# 				next = request.args.get('next')
-	# 				return redirect(url_for('home'))
-	# 		flash('Invalid username or Password')
-	# 		return redirect(url_for('login')) 
- #       else:
-	# 		flash('Username and password required')
-	# 		return redirect(url_for('login')) 
-	# return redirect(url_for('login')) 
+@app.route('/api/users/logout', methods = ['GET'])
+# @login_required
+def userLogout():
+	logout_user()
+	print 'user logged out'
+	return dumps({'message' : '200-OK', 'key': 'null', 'user': {}})
 
+@app.route('/api/users/data', methods = ['POST'])
+# @login_required
+def getUserData():
+	data = request.get_json()
+	try:
+		decoded = decode(data['key'], str(app.secret_key), algorithms='HS256')
+		username = decoded['email']
+		password = decoded['password']
+		
+		user = UserProfile.query.filter_by(username = username).first()
+		
+		if user == None:
+			return dumps({'message' : 'Session Lost', 'key' : 'null', 'user' : {} })
+			
+		elif user.passwordMatch(password):
+			obj = {'userid' : user.id, 'email' : user.username, 'firstname' : user.first_name, 'lastname' : user.last_name, 'image' : user.profile_photo}
+			return dumps({'message' : 'null', 'key' : data['key'], 'user' : obj})
+			
+		else:
+			return dumps({'message' : 'TERMINATED', 'key' : 'null', 'user' : {} })
+			
+	except InvalidTokenError:
+		return dumps({'message' : 'INVALID KEY', 'key' : 'null', 'user' : {} })
+
+
+
+@app.route('/api/users/login', methods = ['POST'])
+def userlogin():
+	data = request.get_json()
+	user = UserProfile.query.filter_by(username = data['email']).first()
+	if user == None:
+		return dumps({'message' : 'Invalid User'})
+	elif user.passwordMatch(data['password']):
+		login_user(user)
+		
+		obj = {'userid' : user.id, 'email' : user.username, 'firstname' : user.first_name, 'lastname' : user.last_name, 'image' : user.profile_photo}
+		key = encode({'email' : user.username, 'password' : data['password']}, str(app.secret_key), algorithm = 'HS256')
+		
+		return dumps({'message' : 'null', 'key' : key, 'user' : obj})
+	else:
+		return dumps({'message' : 'Invalid Password'})
 
 @app.route('/api/users/<userid>/wishlist', methods = ['POST', 'GET'])
-@login_required
+# @login_required
 def userWishList(userid):
-	form = WishForm()
-	if request.method == 'GET':
-		wishes = WishedItem.query.all()
-		myWish = []
-		for wish in wishes:
-			if int(wish.userid) == int(userid):
-				myWish.append(wish)
-		return render_template('wish.html', myWish = myWish)
-	elif request.method == 'POST':
-		if form.validate_on_submit():
-			wish = WishedItem(userid = current_user.id, title = form.wishtitle.data, description = form.description.data, weburl = form.weburl.data, thumbnail = None)
-			db.session.add(wish)
-			db.session.commit()
-			flash('Wish wish added successfully')
-		else:
-			flash('All fields required')
-	return redirect(url_for('createWish'))
 	
+	data = request.get_json()
+	if request.method == 'POST':
+		try:
+			decoded = decode(data['key'], str(app.secret_key), algorithms='HS256')
+			username = decoded['email']
+			password = decoded['password']
+			
+			user = UserProfile.query.filter_by(username = username).first()
+			
+			if user == None:
+				return dumps({'message' : 'Session Lost'})
+				
+			elif user.passwordMatch(password):
+				
+		 		message = data['message']
+		 		
+		 		if message == 'GET':
+		 			return getThumbnails(data['url'])
+		 		else:
+		 			wish = WishedItem(userid = userid, title = data['title'], description = data['description'], weburl = data['url'], thumbnail = data['thumbnail'])
+					db.session.add(wish)
+			 		db.session.commit()
+			 		return dumps({'message' : '200-OK'})
+			 	return dumps({'message' : '404-ERROR'})
+			else:
+				return dumps({'message' : '404-ERROR'})
+				
+		except InvalidTokenError:
+			return dumps({'message' : 'INVALID KEY'})
+	elif request.method == 'GET':
+		user = UserProfile.query.filter_by(id = int(userid)).first()
+		if user == None:
+			return dumps({'message' : 'Session Lost'})
+		else:
+			wishes = WishedItem.query.all()
+			myWish = []
+			for wish in wishes:
+				if int(wish.userid) == int(userid):
+					w = {'id' : wish.id, 'user' : wish.userid, 'title' : wish.title, 'description' : wish.description, 'weburl' : wish.weburl, 'thumbnail' : wish.thumbnail}
+					myWish.append(w)
+			if len(myWish) == 0:
+				return dumps({'message' : 'EMPTY', 'wishes' : myWish})
+			return dumps({'message' : 'SUCCESS', 'wishes' : myWish})
+	else:
+		return dumps({'message' : '404', 'wishes' : []})
+
+
 @app.route('/api/thumbnails')
-@login_required
+# @login_required
 def getThumbnails(url = None):
 	if url == None:
-		return 'None'
-	return 'True'
-
-@app.route('/api/users/<userid>/wishlist/<itemid>', methods=['DELETE', 'POST', 'GET'])
-@login_required
+		return dumps({'message' : '404-ERROR', 'images' : []})
+	result = requests.get(url)
+	soup = BeautifulSoup(result.text, "lxml")
+	
+	images = []
+	for img in soup.findAll("img", src=True):
+		images += [img["src"]]
+	
+	if len(images) == 0:
+		return dumps({'message' : '404-ERROR', 'images' : []})
+	return dumps({'message' : '200-OK', 'images' : images})
+	
+@app.route('/api/users/<userid>/wishlist/<itemid>', methods=['DELETE'])
+# @login_required
 def deleteWish(userid, itemid):
-	wishes = WishedItem.query.all()
+	wishes = WishedItem.query.filter_by(userid = int(userid)).all()
 	for wish in wishes:
-		if int(wish.userid) == int(userid) and int(wish.id) == int(itemid):
+		if int(wish.id) == int(itemid):
 			db.session.delete(wish)
 			db.session.commit()
-			flash('Item deleted')
-	return redirect(url_for('userWishList', userid = current_user.id))
-
-@app.route('/<userid>/mywishlist/')
-@login_required
-def showWishList(userid):
-	return "This will display all the user wishes"
+			return dumps({'message' : '200-OK'})
+	return dumps({'message' : '400-ERROR'})
 
 def validate_file(filename):
 	return '.' in filename and filename.rsplit('.',1)[1] in app.config['ALLOWED_EXTENSIONS']
@@ -185,10 +210,7 @@ def add_header(response):
     return response	
 	
 
-@app.errorhandler(404)
-def page_not_found(error):
-    """Custom 404 page."""
-    return render_template('404.html'), 404
+
     
     
     
