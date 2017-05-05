@@ -125,3 +125,10 @@ input[type="text"], input[type="password"] {
 .thumb-image span:hover{
     cursor: pointer;
 }
+
+.image{
+    overflow-x: hidden;
+    overflow-y: hidden;
+    max-height: 200px;
+    min-height: 200px;
+}

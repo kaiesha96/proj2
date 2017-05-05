@@ -15,7 +15,7 @@ from json import dumps
 import requests
 from bs4 import BeautifulSoup
 import urlparse
-
+from requests.exceptions import MissingSchema
 from requests.packages.urllib3.exceptions import InsecureRequestWarning, SNIMissingWarning, InsecurePlatformWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -39,44 +39,28 @@ def load_user(id):
 
 @app.route('/api/users/register', methods = ['POST'])
 def registerUser():
-	form = RegisterForm()
-	user = None
+	data = request.get_json()
 	if request.method == 'POST':
-		if form.validate_on_submit():
-			file = request.files['image']
-			if not db.session.query(exists().where(UserProfile.username == form.lastname.data)).scalar():
-				if form.password.data == form.confirmpass.data:
-					user = UserProfile(first_name = form.firstname.data, last_name = form.lastname.data, username = form.username.data, password = form.password.data, profile_photo = 'default.png')
-					if file and validate_file(file.filename):
-						filename = secure_filename(file.filename)
-						filename = 'user_profile_{0}.{1}'.format(user.username, filename.split('.')[-1])
-						filefolder = app.config['UPLOAD_FOLDER']
-						file.save(os.path.join(filefolder, filename))
-						user.profile_photo = filename
-					db.session.add(user)
-					db.session.commit()
-					flash('Registration Successful. You may login')
-					return redirect(url_for('login'))
-				else:
-					flash("Passwords does not match")
-					return redirect(url_for('registerUserForm'))
-			flash("Username is already in use. Please enter a new one")
-			return redirect(url_for('registerUserForm'))
-		else:
-			flash("All fields required")
-			return redirect(url_for('registerUserForm'))
-	else:
-		return redirect(url_for('registerUserForm'))
+		if not db.session.query(exists().where(UserProfile.username == data['email'])).scalar():
+			if data['password'] == data['conpassword']:
+				user = UserProfile(first_name = data['firstname'], last_name = data['lastname'],  username = data['email'], password = data['password'] , profile_photo = 'user_profile_administrator.png')
+				db.session.add(user)
+				db.session.commit()
+				return dumps({'message' : '200-OK', 'error' : 'null'})
+			else:
+				return dumps({'message' : '200-OK', 'error' : 'INCORRECT PASSWORDS'})
+		return dumps({'message' : '200-OK', 'error' : 'USER EXIST'})
+	return dumps({'message':'400-ERROR', 'error' : '0X51427'})
 
 @app.route('/api/users/logout', methods = ['GET'])
-# @login_required
+
 def userLogout():
 	logout_user()
 	print 'user logged out'
 	return dumps({'message' : '200-OK', 'key': 'null', 'user': {}})
 
 @app.route('/api/users/data', methods = ['POST'])
-# @login_required
+
 def getUserData():
 	data = request.get_json()
 	try:
@@ -171,18 +155,21 @@ def userWishList(userid):
 @app.route('/api/thumbnails')
 # @login_required
 def getThumbnails(url = None):
-	if url == None:
-		return dumps({'message' : '404-ERROR', 'images' : []})
-	result = requests.get(url)
-	soup = BeautifulSoup(result.text, "lxml")
-	
-	images = []
-	for img in soup.findAll("img", src=True):
-		images += [img["src"]]
-	
-	if len(images) == 0:
-		return dumps({'message' : '404-ERROR', 'images' : []})
-	return dumps({'message' : '200-OK', 'images' : images})
+	try:
+		if url == None:
+			return dumps({'message' : '404-ERROR', 'images' : []})
+		result = requests.get(url)
+		soup = BeautifulSoup(result.text, "lxml")
+		
+		images = []
+		for img in soup.findAll("img", src=True):
+			images += [img["src"]]
+		
+		if len(images) == 0:
+			return dumps({'message' : '404-ERROR', 'images' : []})
+		return dumps({'message' : '200-OK', 'images' : images})
+	except MissingSchema:
+		return dumps({'message' : '400-ERROR', 'error' : 'Invalid URL'})
 	
 @app.route('/api/users/<userid>/wishlist/<itemid>', methods=['DELETE'])
 # @login_required

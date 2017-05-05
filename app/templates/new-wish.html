@@ -21,7 +21,7 @@
 				    <div ng-show="successmsg" class = "alert alert-success">
                         {{successmsg}}
                     </div>
-                    <div ng-show="errormsg" class = "alert alert-warning">
+                    <div ng-show="errormsg" class = "alert alert-danger">
                         {{errormsg}}
                     </div>
                     
@@ -37,7 +37,7 @@
             			Next
             			<i class="checkmark icon"></i>
             		</button>
-            		<button class="ui black deny button pull-right">
+            		<button class="ui black deny button pull-right" ng-click="cancel()">
             			Cancel
             		</button>
             	</div>

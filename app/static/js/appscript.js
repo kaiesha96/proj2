@@ -133,7 +133,6 @@ wishlistApp.controller('wishController', function($scope, $location, $http, CONS
 		else{
 			localStorage.wishes = JSON.stringify(data.wishes);
 			$scope.wishes = JSON.parse(localStorage.wishes);
-			console.log($scope.wishes);
 		}
 	}, function(error){
 		
@@ -164,8 +163,8 @@ wishlistApp.constant('AUTH_EVENTS', {
 
 wishlistApp.controller('loginController', function($scope, $http, $location, $route, CONS) {
 	$scope.user = {
-		email : 'admin@wishlist.com',
-		password : 'administrator'
+		email : '',
+		password : ''
 	};
 	var token = window.localStorage.getItem(CONS.secret);
 	if(token){
@@ -258,28 +257,38 @@ wishlistApp.controller('newWishController', function($scope, $http, $location, C
 		$scope.findimg = !$scope.findimg;
 		$scope.successmsg = "";
 		$scope.errormsg = "";
-
-		
-		var imgdata = {
-			'url' : $scope.newWish.url,
-			'message' : 'GET',
-			'key' : window.localStorage.getItem(CONS.secret)
-		};
-		
-		
-		$http({
-	    	method: 'POST',
-	    	url: url, 
-	    	data: imgdata,
-	    	headers: {'Content-Type': 'application/json'} 
-	    	
-	    }).then(function(success){
-	    	$scope.images = success.data.images;
-	    }, function(error){
-	    	$scope.errormsg = "There was an error. Please try again";
-	    	$scope.findimg = !$scope.findimg;
-	    	console.log('error');
-	    });
+		if($scope.newWish.url == '' || $scope.newWish.description == '' || $scope.newWish.title == ''){
+			$scope.errormsg = "All fields required.";
+			$scope.findimg = !$scope.findimg;
+		}
+		else{
+			var imgdata = {
+				'url' : $scope.newWish.url,
+				'message' : 'GET',
+				'key' : window.localStorage.getItem(CONS.secret)
+			};
+			
+			
+			$http({
+		    	method: 'POST',
+		    	url: url, 
+		    	data: imgdata,
+		    	headers: {'Content-Type': 'application/json'} 
+		    	
+		    }).then(function(success){
+		    	if(success.data.error){
+		    		$scope.findimg = !$scope.findimg;
+		    		$scope.errormsg = "The URL is invalid. Please try again";
+		    	}
+		    	else{
+		    		$scope.images = success.data.images;
+		    	}
+		    }, function(error){
+		    	$scope.errormsg = "There was an error. Please try again";
+		    	$scope.findimg = !$scope.findimg;
+		    	console.log('error');
+		    });
+		}
 	};
 	
 	$scope.submitwish = function(index){
@@ -308,10 +317,97 @@ wishlistApp.controller('newWishController', function($scope, $http, $location, C
 			$scope.errormsg = "There was an error. Please log out and try again";
 		});
 	};
+	
+	$scope.cancel = function(){
+		$scope.images = null;
+		$scope.findimg = false;
+		$scope.successmsg = "";
+		$scope.errormsg = "";
+		$scope.newWish = {};
+	};
 });
 
-wishlistApp.controller('registerController', function($scope) {
-	$scope.message = 'Contact us! JK. This is just a demo.';
+wishlistApp.controller('registerController', function($scope, $location, $http, CONS, $route) {
+	// $scope.message = 'Contact us! JK. This is just a demo.';
+	var url = CONS.url + '/register';
+	$scope.newProfile = function(){
+		$scope.formmessage = [];
+		console.log($scope.newuser);
+		if(!$scope.newuser){
+			$scope.formmessage.push("Please fill in all fields");
+		}
+		else{
+			if($scope.newuser.firstname == '' || $scope.newuser.lastname == '' || $scope.newuser.email == '' || $scope.newuser.password == '' || $scope.newuser.conpassword == ''){
+				
+				if($scope.newuser.firstname == ''){
+					$scope.formmessage.push('First Name Required');
+				}
+				if($scope.newuser.lastname == ''){
+					$scope.formmessage.push('Last Name Required');
+				}
+				if($scope.newuser.email == ''){
+					$scope.formmessage.push('Email Required');
+				}
+				if($scope.newuser.password == '' || $scope.newuser.conpassword == ''){
+					$scope.formmessage.push('Password required');
+				}
+			}
+			else if(!$scope.newuser.firstname || !$scope.newuser.lastname || !$scope.newuser.email || !$scope.newuser.password || !$scope.newuser.conpassword){
+				if(!$scope.newuser.firstname){
+					$scope.formmessage.push('First Name Required');
+				}
+				if(!$scope.newuser.lastname){
+					$scope.formmessage.push('Last Name Required');
+				}
+				if(!$scope.newuser.email){
+					$scope.formmessage.push('Email Required');
+				}
+				if(!$scope.newuser.password || !$scope.newuser.conpassword){
+					$scope.formmessage.push('Password required');
+				}
+			}
+			else{
+				
+				if( !($scope.newuser.password == $scope.newuser.conpassword) ){
+					$scope.formmessage.push('Passwords didn\'t match. Please try again.');
+				}
+				else{
+					$http({
+						method : 'POST', 
+						url: url, 
+						data: $scope.newuser, 
+						headers : {'Content-Type': 'application/json'}
+					}).then(function(success){
+						var data = success.data;
+						
+						if(data.message == '200-OK'){
+							if(data.error == 'null'){
+								$location.path('/login');
+								$location.replace();
+								$route.reload();
+							}
+							else if(data.error == 'INCORRECT PASSWORDS'){
+								$scope.formmessage.push('Passwords didn\'t match. Please try again.');
+							}
+							else if(data.error == 'USER EXIST'){
+								$scope.formmessage.push('Email is already in use. Please try a different email address or proceed to login');
+							}
+							else {
+								$scope.formmessage.push('Error Code: 0x09AFACBE');
+							}
+						}
+					}, function(error){
+						$scope.formmessage.push('There was an error. Please Refresh and try again');
+					});
+				}
+				
+			}
+		}
+	};
+	
+	$scope.cancel = function(){
+		$scope.newuser = {};
+	};
 });
 
 wishlistApp.controller('profileController', function($scope, $location, $http, CONS) {
