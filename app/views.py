@@ -22,9 +22,9 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 requests.packages.urllib3.disable_warnings(SNIMissingWarning)
 requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
 
-@app.route('/login')
+@app.route('/')
 def login():
-	return dumps({'message' : '400-ERROR', 'key': 'null', 'user': {}})
+	return render_template('index2.html');
 	
 @app.route('/logout')
 # @login_required
