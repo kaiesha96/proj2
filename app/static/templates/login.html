@@ -1,0 +1,30 @@
+<div class="jumbotron" >
+    <form class="form-signin" action = '#' method = 'POST' name = "formSignin" ng-model="formSignin">  
+        <!--{{ form.hidden_tag() }}-->
+        <!--{{ form.csrf_token }}-->
+        <h2 class="form-signin-heading">Please login </h2>
+        <!--{{ form.username.label }}-->
+        <!--{{ form.username(size = 30, class = 'form-control') }}-->
+        <input type="text" class="form-control" name="userEmail" ng-model="user.email" placeholder="Email Address" required autofocus id="userEmail" />
+        <!--{{ form.password(size = 30, class = 'form-control') }}-->
+        <input type="password" class="form-control" name="password" ng-model="user.password" placeholder="Password" required />      
+        <label class="checkbox">
+            <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe">Remember me
+        </label>
+        <div ng-show="passworderror" class = "alert alert-danger">
+            {{passworderror}}
+        </div>
+        <div ng-show="emailerror" class = "alert alert-danger">
+            {{emailerror}}
+        </div>
+        <div ng-show="scmessage" class = "alert alert-success">
+            {{scmessage}}
+        </div>
+        <div ng-show="scmessage" class = "alert alert-warning">
+            {{message}}
+        </div>
+    </form>
+    <div class="form-signin form-btn">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()" >Login</button>
+    </div>
+</div>

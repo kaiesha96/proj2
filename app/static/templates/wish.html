@@ -1,0 +1,38 @@
+<div class="jumbotron text-center">
+	<div class="masthead ui text center aligned container">
+		<h1 class="ui header horizontal divider"><i class="star icon"></i> Wishes</h1>
+	</div>
+	
+	<div class="container segment ui">
+			<h1 class="ui left floated header">My Wish List</h1>
+			<a id="add-wish" class="ui primary button pull-right" href="#new-wish"><i class="add icon"> </i> Add Wish </a>
+			<div class="ui primary button"><i class="share icon"></i>Share</div>
+			<div class="divider ui"></div>
+			<div class="ui cards">
+				<div class="ui card" ng-repeat="wish in wishes track by $index">
+				<!--<div class="ui card">-->
+					<div class="image">
+						<a class="header" ng-href = '{{ wish.weburl }}' target="_blank"> <img ng-src='{{ wish.thumbnail }}'> </a>
+					</div>
+					<div class="content">
+						<a class="header" ng-href = '{{ wish.weburl }}' target="_blank">{{ wish.title }}</a>
+						<!--{'id' : wish.id, 'user' : wish.userid, 'title' : wish.title, 'description' : wish.description, 'weburl' : wish.weburl, 'thumbnail' : wish.thumbnail}-->
+					
+						<div class="description">
+							<p> {{ wish.description }} </p>
+						</div>
+					</div>
+					<div class="content extra">
+						Rating:  3 /5 <i class="star icon"></i>
+					</div>
+					<div class="ui bottom attached red button" ng-click="removeWish($index)">
+					<!--<div class="ui bottom attached red button">-->
+						<i class="remove circle icon"></i>
+						Delete Wish
+					</div>
+				</div>
+			</div>
+
+		</div>
+	<!--<p>{{ message }}</p>-->
+</div>

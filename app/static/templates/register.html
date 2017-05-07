@@ -1,0 +1,46 @@
+<div class="jumbotronr">
+    <div class="ui">
+    	<!--<i class="close icon"></i>-->
+    	<div class="content">
+    		<div class="description">
+    			<!--<form class="ui form" ng-submit="addMovie()">-->
+    			<form class="ui form form-signup" action = '#' method = 'POST'>
+    			    <h2 class="form-heading">Register</h2>
+    				<div class="field">
+    					<label>First Name</label>
+    					<input type="text" name="firstname" ng-model="newuser.firstname" placeholder="John">
+    				</div>
+    				<div class="field">
+    					<label>Last Name</label>
+    					<input type="text" name="lastname" ng-model="newuser.lastname" placeholder="Doe">
+    				</div>
+    				<div class="field">
+    					<label>Email Address</label>
+    					<input type="text" name="email" ng-model="newuser.email" placeholder="jon.doe@example.com">
+    				</div>
+    				<div class="field">
+    					<label>Password</label>
+    					<input type="password" name="password" ng-model="newuser.password" placeholder="Password">
+    				</div>
+    				<div class="field">
+    					<label>Confirm Password</label>
+    					<input type="password" name="conpassword" ng-model="newuser.conpassword" placeholder="COnfirm Password">
+    				</div>
+    				<div ng-show="formmessage" class = "alert alert-danger" ng-repeat='msg in formmessage track by $index'>
+                        {{ msg }}
+                    </div>
+    			</form>
+    			<div class="actions form-btn">
+				    <button class="ui positive pull-right labeled icon button" ng-click="newProfile()">
+            			Looks good to me
+            			<i class="checkmark icon"></i>
+            		</button>
+            		<button class="ui black deny button pull-right">
+            			Cancel
+            		</button>
+            	</div>
+    		</div>
+    	</div>
+    	
+    </div>
+</div>

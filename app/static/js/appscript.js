@@ -18,39 +18,39 @@ wishlistApp.config(function($routeProvider) {
 
 	// route for the home page
 	.when('/', {
-		templateUrl : 'app/templates/home.html',
+		templateUrl : '/static/templates/home.html',
 		controller  : 'mainController'
 	})
 
 	// route for the login page
     .when('/login', {
-		templateUrl : '/app/templates/login.html',
+		templateUrl : '/static/templates/login.html',
 		controller  : 'loginController'
 	})
 	
 	// route for the wish page
 	.when('/wish', {
-		templateUrl : 'app/templates/wish.html',
+		templateUrl : '/static/templates/wish.html',
 		controller  : 'wishController'
 	})
 	
 	// route for the register page
 	.when('/register', {
-		templateUrl : 'app/templates/register.html',
+		templateUrl : '/static/templates/register.html',
 		controller  : 'registerController'
 	})
 	
 	// route for the new wish page
 	.when('/new-wish', {
-		templateUrl : 'app/templates/new-wish.html',
+		templateUrl : '/static/templates/new-wish.html',
 		controller  : 'newWishController'
 	})
 	.when('/profile', {
-		templateUrl : 'app/templates/profile.html',
+		templateUrl : '/static/templates/profile.html',
 		controller  : 'profileController'
 	})
 	.otherwise({
-		templateUrl : 'app/templates/home.html',
+		templateUrl : '/static/templates/home.html',
 		controller  : 'mainController'
 	});
 });
@@ -90,7 +90,7 @@ wishlistApp.controller('mainController', function($scope, $http, $location, $rou
 				localStorage.userdata = JSON.stringify($scope.userdata);
 			}
 		},function (error){
-			console.log('Server');
+			// console.log('Server');
 		});
 	}
 
@@ -147,11 +147,11 @@ wishlistApp.controller('wishController', function($scope, $location, $http, CONS
 			method: 'DELETE',
 			url: url
 		}).then( function (success){
-			console.log(success.data.message);
+			// console.log(success.data.message);
 			$scope.wishes.splice(index, 1);
     		localStorage.wishes = JSON.stringify($scope.wishes);
 		}, function(error){
-			console.log(error.data.message);
+			// console.log(error.data.message);
 		});
 	};
 });
@@ -207,7 +207,7 @@ wishlistApp.controller('loginController', function($scope, $http, $location, $ro
 						$scope.passworderror = "Invalid Password. Please try again.";
 					}
 				},function (error){
-					console.log('Server');
+					// console.log('Server');
 				});
 
 			}
@@ -286,7 +286,7 @@ wishlistApp.controller('newWishController', function($scope, $http, $location, C
 		    }, function(error){
 		    	$scope.errormsg = "There was an error. Please try again";
 		    	$scope.findimg = !$scope.findimg;
-		    	console.log('error');
+		    	// console.log('error');
 		    });
 		}
 	};
@@ -328,11 +328,16 @@ wishlistApp.controller('newWishController', function($scope, $http, $location, C
 });
 
 wishlistApp.controller('registerController', function($scope, $location, $http, CONS, $route) {
-	// $scope.message = 'Contact us! JK. This is just a demo.';
+	var token = window.localStorage.getItem(CONS.secret);
+	if(token){
+		$location.path('/');
+		$location.replace();
+		$route.reload();
+	}
+	
 	var url = CONS.url + '/register';
 	$scope.newProfile = function(){
 		$scope.formmessage = [];
-		console.log($scope.newuser);
 		if(!$scope.newuser){
 			$scope.formmessage.push("Please fill in all fields");
 		}
@@ -411,9 +416,8 @@ wishlistApp.controller('registerController', function($scope, $location, $http, 
 });
 
 wishlistApp.controller('profileController', function($scope, $location, $http, CONS) {
-	$scope.message = 'Contact us! JK. This is just a demo.';
 	
-		console.log(CONS.secret);
+
 	// $scope.userdata = null;
 	// if(window.localStorage.getItem(LOCAL_TOKEN_KEY)){
 	// 	$scope.token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
