@@ -56,7 +56,7 @@ wishlistApp.config(function($routeProvider) {
 });
 
 wishlistApp.constant('CONS', {
-  url: 'http://info3180-project2-damainrussel.c9users.io:8081/api/users',
+  url: 'https://boiling-eyrie-14983.herokuapp.com/api/users',
   secret: 'XCX17CHARLIE'
 });
 
