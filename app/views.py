@@ -24,6 +24,7 @@ requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
 
 @app.route('/')
 def login():
+	# return app.send_static_file('index.html')
 	return render_template('index2.html');
 	
 @app.route('/logout')
