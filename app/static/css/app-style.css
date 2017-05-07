@@ -132,3 +132,11 @@ input[type="text"], input[type="password"] {
     max-height: 200px;
     min-height: 200px;
 }
+
+.root a{
+    color: #545151
+}
+
+.root a:hover{
+    color: #d4cccc
+}
